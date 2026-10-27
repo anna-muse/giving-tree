@@ -1,4 +1,4 @@
-import { API_URL } from './config.js';
+import { API_URL } from './api.js';
  
 const form = document.getElementById('nomination-form');
 const toast = document.getElementById('toast');
