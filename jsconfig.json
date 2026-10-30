@@ -8,14 +8,9 @@
   },
   "include": [
     "**/*.js",
-    "**/*.gs"
+    "**/*.jsx",
   ],
   "exclude": [
     "node_modules"
-  ],
-  "typeAcquisition": {
-    "include": [
-      "google-apps-script"
-    ]
-  }
+  ]
 }
