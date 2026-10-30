@@ -1,13 +1,13 @@
 export class Family {
     constructor() {
-        this.firstName = 'John';
-        this.lastName = 'Doe';
-        this.phone = '1234567890';
-        this.email = 'john.doe@example.com';
-        this.address = '123 Main St, Anytown, USA';
-        this.connected = 'CONNECTED';
-        this.campus = 'SOUTH';
-        this.organization = 'Tides';
+        this.firstName = '';
+        this.lastName = '';
+        this.phone = '';
+        this.email = '';
+        this.address = '';
+        this.connected = '';
+        this.campus = '';
+        this.organization = '';
         this.pickupDate = '';
     }
 

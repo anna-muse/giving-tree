@@ -26,7 +26,6 @@ export function RecipientInfo({ recipient, canRemove, onChange, onRemove }) {
       <Field label="What is something they want?" value={recipient.want} onChange={updateRecipientField('want')} />
       <Field label="What is something they need?" value={recipient.need} onChange={updateRecipientField('need')} />
       <Field label="What is something they would wear?" hint="Please include sizes!" value={recipient.clothing} onChange={updateRecipientField('clothing')} />
-      <Field label="What would bring them joy?" value={recipient.joy} onChange={updateRecipientField('joy')} />
       {canRemove && <button type="button" className="remove" onClick={onRemove}>Remove</button>}
     </fieldset>
   );

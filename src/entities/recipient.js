@@ -1,13 +1,12 @@
 export class Recipient {
     constructor() {
         this.id = crypto.randomUUID();
-        this.name = 'Noah';
-        this.age = '4';
-        this.gender = 'M';
-        this.want = 'Ball';
-        this.need = 'Box';
-        this.clothing = 'Pants';
-        this.joy = 'Toy';
+        this.name = '';
+        this.age = '';
+        this.gender = '';
+        this.want = '';
+        this.need = '';
+        this.clothing = '';
     }
 
     duplicate() {
@@ -19,7 +18,6 @@ export class Recipient {
         newRecipient.want = this.want;
         newRecipient.need = this.need;
         newRecipient.clothing = this.clothing;
-        newRecipient.joy = this.joy;
         return newRecipient;
     }
 
@@ -31,7 +29,6 @@ export class Recipient {
         if (externalData.want !== undefined) { this.want = externalData.want.trim(); }
         if (externalData.need !== undefined) { this.need = externalData.need.trim(); }
         if (externalData.clothing !== undefined) { this.clothing = externalData.clothing.trim(); }
-        if (externalData.joy !== undefined) { this.joy = externalData.joy.trim(); }
     }
 
     toExternalForm() {
@@ -42,7 +39,6 @@ export class Recipient {
             want: this.want.trim(),
             need: this.need.trim(),
             clothing: this.clothing.trim(),
-            joy: this.joy.trim(),
         };
     }
 }
