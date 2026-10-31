@@ -1,4 +1,4 @@
-const DEPLOYMENT_ID = 'AKfycbzqLJ15SB9n14dBCkT42HxKa2UcYGQiQKCkV4GqD_i8MgDwMC0HPZiZhReqsZNeFfAz5g';
+const DEPLOYMENT_ID = 'AKfycbz0WVL8FTaJrLwU6dtBu_m0IYvtD4a98lqohqBmS-FBzEdFHeMlt1kpmx2M_oCUndPR3A';
 const API_URL = `https://script.google.com/macros/s/${DEPLOYMENT_ID}/exec`;
 
 async function post(body) {
