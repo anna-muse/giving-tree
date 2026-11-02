@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { claimTags, lookupTag } from '../api.js';
+import { claimTags, getTag } from '../api.js';
 import { Field } from '../components/field.jsx';
 import Scanner from '../components/scanner.jsx';
 import { useStoredState } from '../useStoredState.js';
@@ -14,20 +14,20 @@ export default function ClaimTagsView() {
 
   const setField = (field) => (value) => setDonor((d) => ({ ...d, [field]: value }));
 
-  async function claimTag(code) {
-    if (tags.some((t) => t.code === code)) {
+  async function claimTag(tagId) {
+    if (tags.some((tag) => tag.id === tagId)) {
       setMessage({ text: 'You already scanned that tag.', type: 'info' });
       return;
     }
     try {
-      const gift = await lookupTag(code);
+      const gift = await getTag(tagId);
       if (gift.status !== 'Needed') {
-        setMessage({ text: `Tag ${gift.tag} has already been taken.`, type: 'error' });
+        setMessage({ text: `Tag ${gift.tagNumber} has already been taken.`, type: 'error' });
         return;
       }
-      const entry = { code: gift.code, tag: gift.tag, ageGender: gift.ageGender, item: gift.item };
-      setTags((list) => (list.some((t) => t.code === entry.code) ? list : [...list, entry]));
-      setMessage({ text: `Added tag ${gift.tag}.`, type: 'success' });
+      
+      setTags((list) => (list.some((t) => t.id === gift.id) ? list : [...list, gift]));
+      setMessage({ text: `Added tag ${gift.tagNumber}.`, type: 'success' });
     } catch (err) {
       setMessage({ text: err.message, type: 'error' });
     }
@@ -35,9 +35,9 @@ export default function ClaimTagsView() {
 
   // Scanning a tag with the phone's camera app opens this page with ?t=<code>
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('t');
-    if (code) {
-      claimTag(code.trim().toLowerCase());
+    const tagId = new URLSearchParams(window.location.search).get('t');
+    if (tagId) {
+      claimTag(tagId.trim().toLowerCase());
       window.history.replaceState(null, '', `${window.location.pathname}?page=take`);
     }
   }, []);
@@ -52,7 +52,7 @@ export default function ClaimTagsView() {
     try {
       const response = await claimTags({
         donor: { name: donor.name.trim(), phone: donor.phone.trim(), email: donor.email.trim() },
-        codes: tags.map((t) => t.code),
+        codes: tags.map((tag) => tag.id),
       });
       setResult(response);
       setTags([]);
@@ -72,13 +72,13 @@ export default function ClaimTagsView() {
         {result.claimed.length > 0 && (
           <>
             <p>You’re signed up for {result.claimed.length} {result.claimed.length === 1 ? 'gift' : 'gifts'}:</p>
-            <ul>{result.claimed.map((c) => <li key={c.code}>Tag {c.tag}</li>)}</ul>
+            <ul>{result.claimed.map((c) => <li key={c.id}>Tag {c.tagNumber}</li>)}</ul>
             <p>Please bring each gift back with its tag attached.</p>
           </>
         )}
         {result.failed.length > 0 && (
           <p className="notice error">
-            Someone else took these before you submitted: {result.failed.map((f) => f.tag).join(', ')}.
+            Someone else took these before you submitted: {result.failed.map((f) => f.tagNumber).join(', ')}.
           </p>
         )}
         <button type="button" onClick={() => setResult(null)}>Take more tags</button>
@@ -92,22 +92,22 @@ export default function ClaimTagsView() {
 
       <fieldset>
         <legend>Your Info</legend>
-        <Field label="Name:" required value={donor.name} onChange={setField('name')} autoComplete="name" />
+        <Field label="First Name:" required value={donor.firstName} onChange={setField('firstName')} autoComplete="name" />
+        <Field label="Last Name:" required value={donor.lastName} onChange={setField('lastName')} autoComplete="family-name" />
         <Field label="Phone:" type="tel" value={donor.phone} onChange={setField('phone')} autoComplete="tel" />
-        <Field label="Email:" type="email" required value={donor.email} onChange={setField('email')} autoComplete="email" />
       </fieldset>
 
       <fieldset>
         <legend>Your Tags ({tags.length})</legend>
         {tags.length === 0 && <p>No tags yet. Scan a tag to add it.</p>}
-        {tags.map((t) => (
-          <div className="tag-card" key={t.code}>
+        {tags.map((tag) => (
+          <div className="tag-card" key={tag.id}>
             <div>
-              <strong>{t.tag}</strong>
-              <p>{t.ageGender}</p>
-              <p>{t.item}</p>
+              <strong>{tag.tagNumber}</strong>
+              <p>Age: {tag.recipientAge} | Gender: {tag.recipientGender}</p>
+              <p>{tag.item}</p>
             </div>
-            <button type="button" onClick={() => setTags((list) => list.filter((x) => x.code !== t.code))}>
+            <button type="button" onClick={() => setTags((list) => list.filter((x) => x.id !== tag.id))}>
               Remove
             </button>
           </div>
@@ -122,7 +122,7 @@ export default function ClaimTagsView() {
       </fieldset>
 
       <button type="submit" disabled={busy}>
-        {busy ? 'Submitting…' : `Submit (${tags.length} ${tags.length === 1 ? 'tag' : 'tags'})`}
+        {busy ? 'Submitting…' : `Claim ${tags.length} ${tags.length === 1 ? 'tag' : 'tags'}`}
       </button>
     </form>
   );
