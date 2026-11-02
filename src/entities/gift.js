@@ -20,12 +20,12 @@ export class Gift {
     }
 
     fromExternalForm(externalForm) {
-        if (externalForm['ID'] !== undefined) this.id = externalForm['ID'];
-        if (externalForm['Item'] !== undefined) this.item = externalForm['Item'];
-        if (externalForm['Tag Number'] !== undefined) this.tagNumber = externalForm['Tag Number'];
-        if (externalForm['Recipient Age'] !== undefined) this.recipientAge = externalForm['Recipient Age'];
-        if (externalForm['Recipient Gender'] !== undefined) this.recipientGender = externalForm['Recipient Gender'];
-        if (externalForm['Status'] !== undefined) this.status = externalForm['Status'];
+        if (externalForm.id !== undefined) { this.id = externalForm.id; }
+        if (externalForm.item !== undefined) { this.item = externalForm.item; }
+        if (externalForm.tagNumber !== undefined) { this.tagNumber = externalForm.tagNumber; }
+        if (externalForm.recipientAge !== undefined) { this.recipientAge = externalForm.recipientAge; }
+        if (externalForm.recipientGender !== undefined) { this.recipientGender = externalForm.recipientGender; }
+        if (externalForm.status !== undefined) { this.status = externalForm.status; }
         return this;
     }
 

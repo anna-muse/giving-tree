@@ -18,6 +18,11 @@ export class NominationForm {
     }
 
     toExternalForm() {
+        console.log('this in toExternalForm', {
+            nominator: this.nominator.toExternalForm(),
+            family: this.family.toExternalForm(),
+            recipients: this.recipients.map((recipient) => recipient.toExternalForm()),
+        });
         return {
             nominator: this.nominator.toExternalForm(),
             family: this.family.toExternalForm(),

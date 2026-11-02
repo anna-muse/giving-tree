@@ -1,7 +1,7 @@
 export class Nominator {
     constructor() {
-        this.firstName = '';
-        this.lastName = '';
+        this.firstName = 'Anna';
+        this.lastName = 'Muse';
     }
 
     duplicate() {
@@ -12,8 +12,9 @@ export class Nominator {
     }
 
     fromExternalForm(externalForm) {
-        if (externalForm.firstName !== undefined) this.firstName = externalForm.firstName;
-        if (externalForm.lastName !== undefined) this.lastName = externalForm.lastName;
+        if (externalForm.firstName !== undefined) { this.firstName = externalForm.firstName; }
+        if (externalForm.lastName !== undefined) { this.lastName = externalForm.lastName; }
+        return this;
     }
 
     toExternalForm() {

@@ -1,14 +1,14 @@
 export class Family {
     constructor() {
-        this.firstName = '';
-        this.lastName = '';
-        this.phone = '';
-        this.email = '';
-        this.address = '';
-        this.connected = '';
-        this.campus = '';
-        this.organization = '';
-        this.pickupDate = '';
+        this.firstName = 'John';
+        this.lastName = 'Doe';
+        this.phone = '1234567890';
+        this.email = 'john.doe@example.com';
+        this.address = '123 Main St, Anytown, USA';
+        this.connected = 'CONNECTED';
+        this.campus = 'WILMINGTON';
+        this.organization = 'Tides';
+        this.pickupDate = new Date('2026-12-12T09:00:00').toISOString();
     }
 
     duplicate() {
@@ -26,15 +26,16 @@ export class Family {
     }
 
     fromExternalForm(externalForm) {
-        if (externalForm.firstName !== undefined) this.firstName = externalForm.firstName;
-        if (externalForm.lastName !== undefined) this.lastName = externalForm.lastName;
-        if (externalForm.phone !== undefined) this.phone = externalForm.phone;
-        if (externalForm.email !== undefined) this.email = externalForm.email;
-        if (externalForm.address !== undefined) this.address = externalForm.address;
-        if (externalForm.campus !== undefined) this.campus = externalForm.campus;
-        if (externalForm.connected !== undefined) this.connected = externalForm.connected;
-        if (externalForm.organization !== undefined) this.organization = externalForm.organization;
-        if (externalForm.pickupDate !== undefined) this.pickupDate = externalForm.pickupDate;
+        if (externalForm.firstName !== undefined) { this.firstName = externalForm.firstName; }
+        if (externalForm.lastName !== undefined) { this.lastName = externalForm.lastName; }
+        if (externalForm.phone !== undefined) { this.phone = externalForm.phone; }
+        if (externalForm.email !== undefined) { this.email = externalForm.email; }
+        if (externalForm.address !== undefined) { this.address = externalForm.address; }
+        if (externalForm.campus !== undefined) { this.campus = externalForm.campus; }
+        if (externalForm.connected !== undefined) { this.connected = externalForm.connected; }
+        if (externalForm.organization !== undefined) { this.organization = externalForm.organization; }
+        if (externalForm.pickupDate !== undefined) { this.pickupDate = externalForm.pickupDate; }
+        return this;
     }
 
     toExternalForm() {

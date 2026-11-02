@@ -14,9 +14,9 @@ export class Donor {
     }
 
     fromExternalForm(externalForm) {
-        if (externalForm.firstName !== undefined) this.firstName = externalForm.firstName;
-        if (externalForm.lastName !== undefined) this.lastName = externalForm.lastName;
-        if (externalForm.phone !== undefined) this.phone = externalForm.phone;
+        if (externalForm.firstName !== undefined) { this.firstName = externalForm.firstName; }
+        if (externalForm.lastName !== undefined) { this.lastName = externalForm.lastName; }
+        if (externalForm.phone !== undefined) { this.phone = externalForm.phone; }
         return this;
     }
 
