@@ -31,12 +31,12 @@ export class Gift {
 
     toExternalForm() {
         return {
-            'ID': this.id,
-            'Item': this.item,
-            'Tag Number': this.tagNumber,
-            'Recipient Age': this.recipientAge,
-            'Recipient Gender': this.recipientGender,
-            'Status': this.status,
+            id: this.id,
+            item: this.item,
+            tagNumber: this.tagNumber,
+            recipientAge: this.recipientAge,
+            recipientGender: this.recipientGender,
+            status: this.status,
         };
     }
 }

@@ -24,6 +24,7 @@ export default function Scanner({ onScan }) {
     const scanner = new QrScanner(
       videoRef.current,
       (result) => {
+        setError(result);
         const code = extractCode(result.data);
         const now = Date.now();
         if (!code || (code === last.code && now - last.time < 3000)) return; // ignore repeats
