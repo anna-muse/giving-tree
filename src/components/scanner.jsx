@@ -3,11 +3,11 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
 const ELEMENT_ID = 'qr-reader'; // Html5Qrcode draws its video into the element with this id (one scanner at a time)
 
-// A tag QR holds a link like https://site/?t=g26a1b2c3d4. Pull out the code.
-export function extractCode(text) {
+// A tag QR holds a link like https://site/?t=g26a1b2c3d4. Pull out the tag ID.
+export function extractTagId(text) {
   try {
-    const code = new URL(text).searchParams.get('t');
-    if (code) return code.trim().toLowerCase();
+    const tagId = new URL(text).searchParams.get('t');
+    if (tagId) return tagId.trim().toLowerCase();
   } catch { /* not a URL */ }
   const raw = text.trim().toLowerCase();
   return /^(g\d{2})?[0-9a-f]{8}$/.test(raw) ? raw : null;
@@ -31,12 +31,12 @@ export default function Scanner({ onScan }) {
 
     // The library calls this on every frame that contains a code, so ignore repeats.
     const handleDecode = (text) => {
-      const code = extractCode(text);
+      const tagId = extractTagId(text);
       const now = Date.now();
-      if (!code || (code === last.code && now - last.time < 3000)) return;
-      last.code = code;
+      if (!tagId || (tagId === last.code && now - last.time < 3000)) return;
+      last.code = tagId;
       last.time = now;
-      onScanRef.current(code);
+      onScanRef.current(tagId);
     };
 
     enqueue(async () => {

@@ -115,7 +115,7 @@ export default function ClaimTagsView() {
 
         {message && <p className={`notice ${message.type}`}>{message.text}</p>}
 
-        {scanning && <Scanner qrCodeSuccessCallback={claimTag} />}
+        {scanning && <Scanner onScan={claimTag} />}
         <button type="button" onClick={() => setScanning((s) => !s)}>
           {scanning ? 'Close camera' : 'Scan a tag'}
         </button>
