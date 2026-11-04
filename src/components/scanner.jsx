@@ -21,11 +21,17 @@ let queue = Promise.resolve();
 const enqueue = (task) => { queue = queue.then(task); }; // tasks handle their own errors
 
 // Calls onScan(code, tag) for each new code. `tag` is null when the QR has no tag number.
-export default function Scanner({ onScan }) {
+// Calls onUnrecognized(text) when a QR code is read but isn't a tag link.
+// Pass `fill` when CSS stretches the video to fill a tall box (the full-screen scanner).
+export default function Scanner({ onScan, onUnrecognized, fill = false }) {
   const onScanRef = useRef(onScan);
+  const onUnrecognizedRef = useRef(onUnrecognized);
   const [error, setError] = useState('');
 
-  useEffect(() => { onScanRef.current = onScan; });
+  useEffect(() => {
+    onScanRef.current = onScan;
+    onUnrecognizedRef.current = onUnrecognized;
+  });
 
   useEffect(() => {
     let active = true;
@@ -35,11 +41,13 @@ export default function Scanner({ onScan }) {
     // The library calls this on every frame that contains a code, so ignore repeats.
     const handleDecode = (text) => {
       const scan = parseScan(text);
+      const key = scan ? scan.code : text;
       const now = Date.now();
-      if (!scan || (scan.code === last.code && now - last.time < 3000)) return;
-      last.code = scan.code;
+      if (key === last.code && now - last.time < 3000) return;
+      last.code = key;
       last.time = now;
-      onScanRef.current(scan.code, scan.tag);
+      if (scan) onScanRef.current(scan.code, scan.tag);
+      else onUnrecognizedRef.current?.(text);
     };
 
     enqueue(async () => {
@@ -50,9 +58,17 @@ export default function Scanner({ onScan }) {
           verbose: false,
         });
         // No qrbox: the whole frame is scanned, so there's no box to line the code up with.
+        const config = { fps: 10 };
+        if (fill) {
+          // The library copies the whole camera frame into a canvas shaped like the video's box.
+          // If the camera's shape differs from the box, the copy is squashed and nothing decodes,
+          // so ask the camera for the same shape as the box.
+          const box = document.getElementById(ELEMENT_ID);
+          if (box?.clientWidth && box?.clientHeight) config.aspectRatio = box.clientWidth / box.clientHeight;
+        }
         await scanner.start(
           { facingMode: 'environment' },
-          { fps: 10 },
+          config,
           handleDecode,
           () => {} // runs for every frame with no code in view; nothing to do
         );

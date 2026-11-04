@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { claimTags, getTag } from '../api.js';
 import { Field } from '../components/field.jsx';
-import Scanner from '../components/scanner.jsx';
+import ScannerView from './scannerView.jsx';
 import { useStoredState } from '../useStoredState.js';
 
 // A scanned tag starts out as { id, tagNumber, pending: true } and is replaced by the
@@ -77,14 +77,6 @@ export default function ClaimTagsView() {
         .finally(() => inFlight.current.delete(tagId));
     });
   }, [tags]);
-
-  // Stop the page behind the scanner from scrolling
-  useEffect(() => {
-    if (!scanning) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previous; };
-  }, [scanning]);
 
   useEffect(() => {
     if (!flash) return;
@@ -181,21 +173,13 @@ export default function ClaimTagsView() {
       </form>
 
       {scanning && (
-        <div className="scan-screen">
-          <Scanner onScan={addScanned} />
-          <div className="scan-panel">
-            <div className="scan-header">
-              <strong>{tags.length} {tags.length === 1 ? 'tag' : 'tags'} scanned</strong>
-              {flash && <span className={`scan-flash ${flash.type}`}>{flash.text}</span>}
-            </div>
-            <ul className="scan-list">
-              {[...tags].reverse().map((tag) => <li key={tag.id}>{tag.tagNumber}</li>)}
-            </ul>
-            <button type="button" className="primary" onClick={() => setScanning(false)}>
-              Done Scanning
-            </button>
-          </div>
-        </div>
+        <ScannerView
+          tags={tags}
+          flash={flash}
+          onScan={addScanned}
+          onUnrecognized={(text) => setFlash({ text: `Not a tag QR code: ${text.slice(0, 40)}`, type: 'error' })}
+          onDone={() => setScanning(false)}
+        />
       )}
     </>
   );
