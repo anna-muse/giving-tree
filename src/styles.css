@@ -340,3 +340,94 @@ legend {
 .result.error   { background: #fee2e2; color: #991b1b; }
 .result.info    { background: #e0e7ff; color: #3730a3; }
 .counter { text-align: center; color: #555; margin-bottom: 20px; }
+
+/* ===== FULL-SCREEN SCANNER ===== */
+.scan-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background: #111;
+}
+
+.scan-screen .scan-error { margin: 0; border-radius: 0; }
+
+/* The camera takes all the space the list panel doesn't (about 78% of a phone screen) */
+.scan-screen .scanner {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    border: 0 !important;
+    border-radius: 0;
+}
+
+.scan-screen .scanner video {
+    width: 100% !important;  /* the library sets a pixel width inline */
+    height: 100% !important;
+    object-fit: cover;
+}
+
+/* Decorative guide only; the whole frame is scanned */
+.scan-screen .scanner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 60vmin;
+    height: 60vmin;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.scan-panel {
+    flex: none;
+    height: 22vh;
+    min-height: 11rem;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+}
+
+.scan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+}
+
+.scan-flash { font-size: 14px; padding: 2px 10px; border-radius: 12px; }
+.scan-flash.success { background: #d1fae5; color: #065f46; }
+.scan-flash.info { background: #e0e7ff; color: #3730a3; }
+.scan-flash.error { background: #fee2e2; color: #991b1b; }
+
+.scan-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    list-style: none;
+    margin: 6px 0;
+}
+
+.scan-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    font-weight: 600;
+    color: #667eea;
+}
+
+.scan-panel .primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    font-size: 16px;
+}

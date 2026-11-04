@@ -3,14 +3,16 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
 const ELEMENT_ID = 'qr-reader'; // Html5Qrcode draws its video into the element with this id (one scanner at a time)
 
-// A tag QR holds a link like https://site/?t=g26a1b2c3d4. Pull out the tag ID.
-export function extractTagId(text) {
+// A tag QR holds a link like https://site/?t=g26a1b2c3d4&n=3-1B
+//   t = the gift's ID (what the backend uses), n = the tag number (display only).
+export function parseScan(text) {
   try {
-    const tagId = new URL(text).searchParams.get('t');
-    if (tagId) return tagId.trim().toLowerCase();
+    const params = new URL(text).searchParams;
+    const code = params.get('t')?.trim().toLowerCase();
+    if (code) return { code, tag: params.get('n')?.trim() || null };
   } catch { /* not a URL */ }
   const raw = text.trim().toLowerCase();
-  return /^(g\d{2})?[0-9a-f]{8}$/.test(raw) ? raw : null;
+  return /^(g\d{2})?[0-9a-f]{8}$/.test(raw) ? { code: raw, tag: null } : null;
 }
 
 // Start and stop run one at a time. In development React mounts, unmounts and remounts
@@ -18,6 +20,7 @@ export function extractTagId(text) {
 let queue = Promise.resolve();
 const enqueue = (task) => { queue = queue.then(task); }; // tasks handle their own errors
 
+// Calls onScan(code, tag) for each new code. `tag` is null when the QR has no tag number.
 export default function Scanner({ onScan }) {
   const onScanRef = useRef(onScan);
   const [error, setError] = useState('');
@@ -31,12 +34,12 @@ export default function Scanner({ onScan }) {
 
     // The library calls this on every frame that contains a code, so ignore repeats.
     const handleDecode = (text) => {
-      const tagId = extractTagId(text);
+      const scan = parseScan(text);
       const now = Date.now();
-      if (!tagId || (tagId === last.code && now - last.time < 3000)) return;
-      last.code = tagId;
+      if (!scan || (scan.code === last.code && now - last.time < 3000)) return;
+      last.code = scan.code;
       last.time = now;
-      onScanRef.current(tagId);
+      onScanRef.current(scan.code, scan.tag);
     };
 
     enqueue(async () => {
@@ -46,15 +49,10 @@ export default function Scanner({ onScan }) {
           formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
           verbose: false,
         });
+        // No qrbox: the whole frame is scanned, so there's no box to line the code up with.
         await scanner.start(
           { facingMode: 'environment' },
-          {
-            fps: 10,
-            qrbox: (width, height) => {
-              const side = Math.max(50, Math.floor(Math.min(width, height) * 0.7)); // the library rejects boxes under 50px
-              return { width: side, height: side };
-            },
-          },
+          { fps: 10 },
           handleDecode,
           () => {} // runs for every frame with no code in view; nothing to do
         );
