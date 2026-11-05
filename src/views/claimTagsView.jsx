@@ -94,7 +94,7 @@ export default function ClaimTagsView() {
     try {
       const response = await claimTags({
         donor: { firstName: text(donor.firstName), lastName: text(donor.lastName), phone: text(donor.phone) },
-        codes: ready.map((tag) => tag.id),
+        giftIds: ready.map((tag) => tag.id),
       });
       setResult(response);
       setTags([]);

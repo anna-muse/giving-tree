@@ -1,7 +1,7 @@
 export class Nominator {
     constructor() {
-        this.firstName = 'Anna';
-        this.lastName = 'Muse';
+        this.firstName = '';
+        this.lastName = '';
     }
 
     duplicate() {

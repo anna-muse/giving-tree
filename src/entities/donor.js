@@ -1,8 +1,8 @@
 export class Donor {
     constructor() {
-        this.firstName = 'Amy';
-        this.lastName = 'Donor';
-        this.phone = '1234567890';
+        this.firstName = '';
+        this.lastName = '';
+        this.phone = '';
     }
 
     duplicate() {
