@@ -80,7 +80,7 @@ export default function ClaimTagsView() {
 
   useEffect(() => {
     if (!flash) return;
-    const timer = setTimeout(() => setFlash(null), flash.type === 'error' ? 4000 : 2000);
+    const timer = setTimeout(() => setFlash(null), 10000);
     return () => clearTimeout(timer);
   }, [flash]);
 
@@ -177,7 +177,7 @@ export default function ClaimTagsView() {
           tags={tags}
           flash={flash}
           onScan={addScanned}
-          onUnrecognized={(text) => setFlash({ text: `Not a tag QR code: ${text.slice(0, 40)}`, type: 'error' })}
+          onUnrecognized={(text) => setFlash({ text: `Not a Giving Tree tag`, type: 'error' })}
           onDone={() => setScanning(false)}
         />
       )}
