@@ -1,4 +1,4 @@
-const DEPLOYMENT_ID = 'AKfycbwVSXbwbcyfo_keoVavV5L1Ng0rETJ5IbLs6mCHb080XTPOtRfRooMwRtV0r6ZfMnvU-w';
+const DEPLOYMENT_ID = 'AKfycbyv8WxouWhQbbhE5piTja3iIuM1S5f1UN0MNXNFzMPhcb6Q6EbnurTIEIqu6i3CErQFuA';
 const API_URL = `https://script.google.com/macros/s/${DEPLOYMENT_ID}/exec`;
 
 import { Gift } from './entities/gift.js';
