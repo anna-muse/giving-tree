@@ -427,3 +427,19 @@ legend {
     padding: 12px;
     font-size: 16px;
 }
+
+/* Live readout shown over the camera when the page address has ?debug */
+.scan-debug {
+    position: absolute;
+    top: env(safe-area-inset-top, 0);
+    left: 0;
+    z-index: 5;
+    margin: 0;
+    padding: 4px 8px;
+    max-width: 100%;
+    font: 11px/1.3 monospace;
+    color: #7CFC00;
+    background: rgba(0, 0, 0, 0.7);
+    white-space: pre-wrap;
+    pointer-events: none;
+}
