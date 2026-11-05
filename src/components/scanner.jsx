@@ -20,9 +20,24 @@ export function parseScan(text) {
 let queue = Promise.resolve();
 const enqueue = (task) => { queue = queue.then(task); }; // tasks handle their own errors
 
+// Covers the box with the video: centers it and scales it up evenly until it fills the height.
+// A CSS transform doesn't change the sizes the library measures, so decoding is unaffected.
+function fitVideo(box) {
+  const video = box?.querySelector('video');
+  if (!video || !video.clientHeight) return;
+  const scale = Math.max(1, box.clientHeight / video.clientHeight);
+  Object.assign(video.style, {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: `translate(-50%, -50%) scale(${scale})`,
+  });
+}
+
 // Calls onScan(code, tag) for each new code. `tag` is null when the QR has no tag number.
 // Calls onUnrecognized(text) when a QR code is read but isn't a tag link.
-// Pass `fill` when CSS stretches the video to fill a tall box (the full-screen scanner).
+// Pass `fill` to make the video cover its box (the full-screen scanner). It is scaled up evenly,
+// never stretched, so the decoder still sees the camera's true shape.
 export default function Scanner({ onScan, onUnrecognized, fill = false }) {
   const onScanRef = useRef(onScan);
   const onUnrecognizedRef = useRef(onUnrecognized);
@@ -36,6 +51,7 @@ export default function Scanner({ onScan, onUnrecognized, fill = false }) {
   useEffect(() => {
     let active = true;
     let scanner = null;
+    let fit = null;
     const last = { code: '', time: 0 };
 
     // The library calls this on every frame that contains a code, so ignore repeats.
@@ -58,20 +74,21 @@ export default function Scanner({ onScan, onUnrecognized, fill = false }) {
           verbose: false,
         });
         // No qrbox: the whole frame is scanned, so there's no box to line the code up with.
-        const config = { fps: 10 };
-        if (fill) {
-          // The library copies the whole camera frame into a canvas shaped like the video's box.
-          // If the camera's shape differs from the box, the copy is squashed and nothing decodes,
-          // so ask the camera for the same shape as the box.
-          const box = document.getElementById(ELEMENT_ID);
-          if (box?.clientWidth && box?.clientHeight) config.aspectRatio = box.clientWidth / box.clientHeight;
-        }
         await scanner.start(
           { facingMode: 'environment' },
-          config,
+          { fps: 10 },
           handleDecode,
           () => {} // runs for every frame with no code in view; nothing to do
         );
+        if (fill) {
+          const box = document.getElementById(ELEMENT_ID);
+          fit = () => fitVideo(box);
+          const video = box?.querySelector('video');
+          video?.addEventListener('loadedmetadata', fit);
+          video?.addEventListener('playing', fit);
+          window.addEventListener('resize', fit);
+          fit();
+        }
       } catch {
         scanner = null;
         if (active) setError('Could not open the camera. Check that camera access is allowed for this site.');
@@ -80,6 +97,7 @@ export default function Scanner({ onScan, onUnrecognized, fill = false }) {
 
     return () => {
       active = false;
+      if (fit) window.removeEventListener('resize', fit);
       enqueue(async () => {
         if (!scanner) return;
         try {

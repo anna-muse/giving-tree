@@ -363,11 +363,7 @@ legend {
     border-radius: 0;
 }
 
-.scan-screen .scanner video {
-    width: 100% !important;  /* the library sets a pixel width inline */
-    height: 100% !important;
-    object-fit: cover;
-}
+/* The video keeps its natural shape; Scanner.jsx scales it up evenly to cover this box */
 
 /* Decorative guide only; the whole frame is scanned */
 .scan-screen .scanner::after {
