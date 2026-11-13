@@ -12,7 +12,7 @@ import ClaimTagsView from './views/claimTagsView.jsx';
 export default function App() {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page');
-  if (params.has('t') || page === 'take') return <ClaimTagsView />;
+  // if (params.has('t') || page === 'take') return <ClaimTagsView />;
   // if (page === 'checkin') return <CheckIn />;
   return <NominationFormView />;
   // return <h1>Giving Tree</h1>;

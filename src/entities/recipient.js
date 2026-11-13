@@ -23,12 +23,12 @@ export class Recipient {
 
     fromExternalForm(externalData) {
         if (externalData.id !== undefined) { this.id = externalData.id; }
-        if (externalData.name !== undefined) { this.name = externalData.name.trim(); }
-        if (externalData.age !== undefined) { this.age = externalData.age.trim(); }
-        if (externalData.gender !== undefined) { this.gender = externalData.gender.trim(); }
-        if (externalData.want !== undefined) { this.want = externalData.want.trim(); }
-        if (externalData.need !== undefined) { this.need = externalData.need.trim(); }
-        if (externalData.clothing !== undefined) { this.clothing = externalData.clothing.trim(); }
+        if (externalData.name !== undefined) { this.name = externalData.name; }
+        if (externalData.age !== undefined) { this.age = externalData.age; }
+        if (externalData.gender !== undefined) { this.gender = externalData.gender; }
+        if (externalData.want !== undefined) { this.want = externalData.want; }
+        if (externalData.need !== undefined) { this.need = externalData.need; }
+        if (externalData.clothing !== undefined) { this.clothing = externalData.clothing; }
         return this;
     }
 
