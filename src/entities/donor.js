@@ -1,3 +1,5 @@
+import * as phoneNumberUtils from '../utilities/phoneNumberUtils.js';
+
 export class Donor {
     constructor() {
         this.firstName = '';
@@ -24,7 +26,7 @@ export class Donor {
         return {
             firstName: this.firstName.trim(),
             lastName: this.lastName.trim(),
-            phone: this.phone.trim(),
+            phone: phoneNumberUtils.format(this.phone.trim()),
         };
     }
 }

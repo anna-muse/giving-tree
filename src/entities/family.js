@@ -1,3 +1,5 @@
+import * as phoneNumberUtils from '../utilities/phoneNumberUtils.js';
+
 export class Family {
     constructor() {
         this.firstName = '';
@@ -42,7 +44,7 @@ export class Family {
         return {
             firstName: this.firstName.trim(),
             lastName: this.lastName.trim(),
-            phone: this.phone.trim(),
+            phone: phoneNumberUtils.format(this.phone.trim()),
             email: this.email.trim(),
             address: this.address.trim(),
             campus: this.campus.trim(),
